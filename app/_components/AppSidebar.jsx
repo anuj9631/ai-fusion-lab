@@ -32,7 +32,7 @@ export function AppSidebar() {
               alt="logo"
               width={60}
               height={60}
-              className="w-[40px] h-[40px]"
+              className="w-10 h-10"
             />
             <h2 className="font-bold text-xl">AI Fusion</h2>
           </div>
