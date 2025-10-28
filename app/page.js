@@ -8,10 +8,7 @@ export default function Home() {
   const {setTheme} =useTheme();
   return (
     <div>
-     <h2>Subscribe me </h2>
-     <Button>Subscribe </Button>
-     <Button onClick={()=>setTheme('dark')}>Dark Mode</Button>
-     <Button onClick={()=>setTheme('light')} >Light Mode</Button>
+     
     </div>
   );
 }
