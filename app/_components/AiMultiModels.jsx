@@ -9,23 +9,28 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { MessageSquare } from "lucide-react";
 
 function AiMultiModels() {
   const [aiModelList, setAiModelList] = useState(AiModelList);
 
+  const onToggleChnage=(model, value) =>{
+   setAiModelList((prev)=>
+  prev.map((m)=>m.model===model?{...m, enable:value} : m))
+  }
   return (
     <div className="flex flex-1 h-[85vh] border-b pb-[100px]">
 
       {aiModelList.map((model, index) => (
-        <div
-          className="flex flex-col border-r h-full min-w-[400px]"
+        <div key={index}
+          className={`flex flex-col border-r h-full overflow-auto transition-all duration-100 ${model.enable?'flex-1 min-w-[350px]' :'w-[100px] flex-none'}`}
         >
           {/* Header */}
-          <div   key={index} className="flex w-full items-center justify-between p-4 border-b bg-white">
+          <div    className="flex w-full h-[60px] items-center justify-between p-4 border-b bg-white">
             <div  className="flex items-center gap-4">
               <Image src={model.icon} alt={model.model} width={24} height={24} />
 
-              <Select>
+         {model.enable &&      <Select>
                 <SelectTrigger className="w-[160px]">
                   <SelectValue placeholder={model.subModel[0].name} />
                 </SelectTrigger>
@@ -36,10 +41,10 @@ function AiMultiModels() {
                     </SelectItem>
                   ))}
                 </SelectContent>
-              </Select>
+              </Select>}
             </div>
 
-            <Switch />
+        {model.enable ?    <Switch checked={model.enable} onCheckedChange={(v)=>onToggleChnage(model.model,v)}/> : <MessageSquare onClick={()=>onToggleChnage(model.model,true)} />}
           </div>
 
           {/* Scrollable area for chat responses */}
