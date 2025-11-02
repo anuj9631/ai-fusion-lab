@@ -9,7 +9,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { MessageSquare } from "lucide-react";
+import { Lock, MessageSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 function AiMultiModels() {
   const [aiModelList, setAiModelList] = useState(AiModelList);
@@ -46,13 +47,20 @@ function AiMultiModels() {
 
         {model.enable ?    <Switch checked={model.enable} onCheckedChange={(v)=>onToggleChnage(model.model,v)}/> : <MessageSquare onClick={()=>onToggleChnage(model.model,true)} />}
           </div>
-
+             { model.premium && model.enable && <div className="flex items-center justify-center h-full">
+        <Button> <Lock /> Upgrade to unlock</Button>
+       </div> }
           {/* Scrollable area for chat responses */}
           <div className="flex-1 overflow-auto p-3">
             {/* model output will come here later */}
           </div>
+
+
+
         </div>
       ))}
+     
+
     </div>
   );
 }
