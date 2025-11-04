@@ -9,13 +9,15 @@ import {
   SidebarGroup,
   SidebarHeader,
 } from "@/components/ui/sidebar"
-import { Moon, Sun } from "lucide-react"
+import { Moon, Sun, User2 } from "lucide-react"
 import { useTheme } from "next-themes"
 import Image from "next/image"
+import { SignInButton, useUser } from "@clerk/nextjs"
 
 export function AppSidebar() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const {user} = useUser();
 
   useEffect(() => {
     setMounted(true)
@@ -67,7 +69,12 @@ export function AppSidebar() {
 
       <SidebarFooter>
 <div className="p-3 mb-10">
-  <Button className={'w-full'} size={'lg'}>Sign In/Sign up</Button>
+ { !user?  <SignInButton mode="model">
+  <Button className={'w-full'} size={'lg'}>Sign In/Sign up</Button></SignInButton> : 
+  <Button className="flex w-full" variant={'ghost'}>
+    <User2 /> <h2>Settings</h2> 
+  </Button>
+    }
 </div>
       </SidebarFooter>
     </Sidebar>
