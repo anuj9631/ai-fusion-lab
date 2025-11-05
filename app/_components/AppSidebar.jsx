@@ -9,10 +9,11 @@ import {
   SidebarGroup,
   SidebarHeader,
 } from "@/components/ui/sidebar"
-import { Moon, Sun, User2 } from "lucide-react"
+import { Bolt, Moon, Sun, User2, Zap } from "lucide-react"
 import { useTheme } from "next-themes"
 import Image from "next/image"
 import { SignInButton, useUser } from "@clerk/nextjs"
+import UsageCreaditProgress from "./UsageCreaditProgress"
 
 export function AppSidebar() {
   const { theme, setTheme } = useTheme()
@@ -71,9 +72,13 @@ export function AppSidebar() {
 <div className="p-3 mb-10">
  { !user?  <SignInButton mode="model">
   <Button className={'w-full'} size={'lg'}>Sign In/Sign up</Button></SignInButton> : 
+  <div>
+    <UsageCreaditProgress />
+    <Button className={'w-full mb-3'}> <Zap /> Upgrade Plan</Button>
   <Button className="flex w-full" variant={'ghost'}>
     <User2 /> <h2>Settings</h2> 
   </Button>
+  </div>
     }
 </div>
       </SidebarFooter>
