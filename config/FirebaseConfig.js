@@ -10,7 +10,7 @@ const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: "ai-fusion-lab-db3f4.firebaseapp.com",
   projectId: "ai-fusion-lab-db3f4",
-  storageBucket: "ai-fusion-lab-db3f4.firebasestorage.app",
+  storageBucket: "ai-fusion-lab-db3f4.appspot.com",
   messagingSenderId: "322760004963",
   appId: "1:322760004963:web:064804f6c0177a44cb6f56"
 };
