@@ -4,7 +4,9 @@ import React, { useState } from "react";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -36,11 +38,24 @@ function AiMultiModels() {
                   <SelectValue placeholder={model.subModel[0].name} />
                 </SelectTrigger>
                 <SelectContent>
-                  {model.subModel.map((subModel, subIndex) => (
+                  <SelectGroup className="px-3">
+                    <SelectLabel className='text-sm text-gray-400'>Free</SelectLabel>
+                  {model.subModel.map((subModel, subIndex) => subModel.premium ==false && (
                     <SelectItem key={subIndex} value={subModel.name}>
                       {subModel.name}
                     </SelectItem>
                   ))}
+                  </SelectGroup>
+
+
+                  <SelectGroup className="px-3">
+                    <SelectLabel className='text-sm text-gray-400'>Premimum</SelectLabel>
+                  {model.subModel.map((subModel, subIndex) => subModel.premium ==true && (
+                    <SelectItem key={subIndex} value={subModel.name} disabled={subModel.premium}>
+                      {subModel.name} {subModel.premium && <Lock className="h-4 w-4" />}
+                    </SelectItem>
+                  ))}
+                  </SelectGroup>
                 </SelectContent>
               </Select>}
             </div>
