@@ -1,6 +1,6 @@
 import AiModelList from "./../../shared/AiModelList";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -13,14 +13,36 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Lock, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import { AiSelectedModelContext } from "@/context/AiSelectedModelContext";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/config/FirebaseConfig";
+import { useUser } from "@clerk/nextjs";
+ //2.5/44
 function AiMultiModels() {
+  const {user} =useUser();
   const [aiModelList, setAiModelList] = useState(AiModelList);
+  const {aiSelectedModels, setAiSelectedModels} =useContext(AiSelectedModelContext);
 
   const onToggleChnage=(model, value) =>{
    setAiModelList((prev)=>
   prev.map((m)=>m.model===model?{...m, enable:value} : m))
   }
+
+ const onSelectValue = async (parentModel, value) => {
+  const updatedModels = {
+    ...aiSelectedModels,
+    [parentModel]: { modelId: value },
+  };
+  setAiSelectedModels(updatedModels);
+
+  // Update Firestore
+  const docRef = doc(db, "users", user?.primaryEmailAddress?.emailAddress);
+  await updateDoc(docRef, {
+    selectedModelPref: updatedModels,
+  });
+};
+
+
   return (
     <div className="flex flex-1 h-[85vh] border-b pb-[100px]">
 
@@ -33,15 +55,19 @@ function AiMultiModels() {
             <div  className="flex items-center gap-4">
               <Image src={model.icon} alt={model.model} width={24} height={24} />
 
-         {model.enable &&      <Select>
+         {model.enable &&      <Select
+  defaultValue={aiSelectedModels[model.model].modelId}
+  onValueChange={(value) => onSelectValue(model.model, value)}
+>
+
                 <SelectTrigger className="w-[160px]">
-                  <SelectValue placeholder={model.subModel[0].name} />
+                  <SelectValue placeholder={aiSelectedModels[model.model].modelId} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup className="px-3">
                     <SelectLabel className='text-sm text-gray-400'>Free</SelectLabel>
-                  {model.subModel.map((subModel, subIndex) => subModel.premium ==false && (
-                    <SelectItem key={subIndex} value={subModel.name}>
+                  {model.subModel.map((subModel, i) => subModel.premium ==false && (
+                    <SelectItem key={i} value={subModel.id}>
                       {subModel.name}
                     </SelectItem>
                   ))}
@@ -50,8 +76,8 @@ function AiMultiModels() {
 
                   <SelectGroup className="px-3">
                     <SelectLabel className='text-sm text-gray-400'>Premimum</SelectLabel>
-                  {model.subModel.map((subModel, subIndex) => subModel.premium ==true && (
-                    <SelectItem key={subIndex} value={subModel.name} disabled={subModel.premium}>
+                  {model.subModel.map((subModel, i) => subModel.premium ==true && (
+                    <SelectItem key={i} value={subModel.name} disabled={subModel.premium}>
                       {subModel.name} {subModel.premium && <Lock className="h-4 w-4" />}
                     </SelectItem>
                   ))}
