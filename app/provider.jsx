@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { AppSidebar } from './_components/AppSidebar'
@@ -8,11 +8,16 @@ import AppHeader from './_components/AppHeader'
 import { useUser } from '@clerk/nextjs'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { db } from '@/config/FirebaseConfig'
+import { AiSelectedModelContext } from '@/context/AiSelectedModelContext'
+import { DefaultModel } from '@/shared/AiModelsShared'
 
 function Provider({
   children,
   ...props
 }) {
+
+
+  const [aiSelectedModels, setAiSelectedModels]  = useState(DefaultModel)
 
   const {user} = useUser();
   useEffect(()=>{
@@ -52,7 +57,7 @@ function Provider({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange {...props}>
-       
+       <AiSelectedModelContext.Provider value={{aiSelectedModels, setAiSelectedModels}}>
        <SidebarProvider>
       
         <AppSidebar />
@@ -61,7 +66,7 @@ function Provider({
           <AppHeader />
           {children}</div>
        </SidebarProvider>
-       
+       </AiSelectedModelContext.Provider>
     </NextThemesProvider>
    
   )
