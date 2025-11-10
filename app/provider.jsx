@@ -10,6 +10,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { db } from '@/config/FirebaseConfig'
 import { AiSelectedModelContext } from '@/context/AiSelectedModelContext'
 import { DefaultModel } from '@/shared/AiModelsShared'
+import { UserDetailContext } from '@/context/UserDetailContext'
 
 function Provider({
   children,
@@ -20,6 +21,8 @@ function Provider({
   const [aiSelectedModels, setAiSelectedModels]  = useState(DefaultModel)
 
   const {user} = useUser();
+ const [userDetail, setUserDetail] =useState();
+
   useEffect(()=>{
   if(user){
     CreateNewUser();
@@ -35,6 +38,9 @@ function Provider({
     if(userSnap.exists())
      {
       console.log("Existing User");
+      const userInfo=userSnap.data();
+      setAiSelectedModels(userInfo?.selectedModelPref);
+      setUserDetail(userInfo);
       return;
      }else{
       const userData={
@@ -48,6 +54,7 @@ function Provider({
       }
       await setDoc(userRef,userData);
       console.log('New User Data Saved')
+      setUserDetail(userData);
      }
     //if user not exist insert
   }
@@ -57,6 +64,8 @@ function Provider({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange {...props}>
+
+              <UserDetailContext.Provider value={{userDetail, setUserDetail}}>
        <AiSelectedModelContext.Provider value={{aiSelectedModels, setAiSelectedModels}}>
        <SidebarProvider>
       
@@ -67,6 +76,7 @@ function Provider({
           {children}</div>
        </SidebarProvider>
        </AiSelectedModelContext.Provider>
+       </UserDetailContext.Provider>
     </NextThemesProvider>
    
   )
