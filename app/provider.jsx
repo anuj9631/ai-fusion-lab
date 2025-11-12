@@ -23,6 +23,8 @@ function Provider({
   const {user} = useUser();
  const [userDetail, setUserDetail] =useState();
 
+ const [messages, setMessages] = useState({})
+
   useEffect(()=>{
   if(user){
     CreateNewUser();
@@ -39,7 +41,7 @@ function Provider({
      {
       console.log("Existing User");
       const userInfo=userSnap.data();
-      setAiSelectedModels(userInfo?.selectedModelPref);
+      setAiSelectedModels(userInfo?.selectedModelPref ?? DefaultModel);
       setUserDetail(userInfo);
       return;
      }else{
@@ -49,8 +51,8 @@ function Provider({
         createdAt:new Date(),
         reminaingMsg: 5,//only for free user
         plan: 'Free',
-        credits: 1000 //paid user
-
+        credits: 1000, //paid user
+        selectedModelPref: DefaultModel,
       }
       await setDoc(userRef,userData);
       console.log('New User Data Saved')
@@ -66,7 +68,7 @@ function Provider({
             disableTransitionOnChange {...props}>
 
               <UserDetailContext.Provider value={{userDetail, setUserDetail}}>
-       <AiSelectedModelContext.Provider value={{aiSelectedModels, setAiSelectedModels}}>
+       <AiSelectedModelContext.Provider value={{aiSelectedModels, setAiSelectedModels, messages, setMessages}}>
        <SidebarProvider>
       
         <AppSidebar />
