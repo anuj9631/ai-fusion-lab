@@ -68,7 +68,7 @@ function AiMultiModels() {
                     onValueChange={(value) => onSelectValue(model.model, value)}
                     disabled={model.premium}
                   >
-                    <SelectTrigger className="w-[160px]">
+                    <SelectTrigger className="w-40">
                       <SelectValue placeholder={aiSelectedModels[model.model].modelId} />
                     </SelectTrigger>
                     <SelectContent>
